@@ -84,7 +84,7 @@ public:
   // If an item is present in both sets,
   // only one appearance of this item will be present in the updated set.
   {
-    for (const T &value : _other_set)
+    for (const T &value : _other_set.values())
     {
       m_set.insert(value);
     }
@@ -92,11 +92,7 @@ public:
 
   Set<T> union_with(const Set<T> &_other_set) const
   {
-    Set<T> union_set;
-    for (const T &value : m_set)
-    {
-      union_set.add(value);
-    }
+    Set<T> union_set(m_set);
     for (const T &value : _other_set.values())
     {
       union_set.add(value);
@@ -139,9 +135,31 @@ public:
   {
     return m_set;
   }
-
-  friend std::ostream &operator<<(std::ostream &stream, const Set<T> &set)
+  bool operator==(const Set<T> &_other_set) const
   {
+    if (m_set.size() != _other_set.m_set.size())
+    {
+      return false;
+    }
+    // std::set is sorted by default
+    for (const T &value : m_set)
+    {
+      if (!_other_set.is_contains(value))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  friend std::ostream &
+  operator<<(std::ostream &stream, const Set<T> &set)
+  {
+    if (set.size() == 0)
+    {
+      stream << "{ }";
+      return stream;
+    }
     stream << "{";
 
     for (const T &value : set.m_set)

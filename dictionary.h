@@ -29,7 +29,7 @@ public:
     Dict()
     {
     }
-    Dict(const std::initializer_list<std::pair<const K, V> > &init)
+    Dict(const std::initializer_list<std::pair<const K, V>> &init)
         : m_map(init)
     {
     }
@@ -184,6 +184,11 @@ public:
 
     friend std::ostream &operator<<(std::ostream &stream, const Dict<K, V> &dict)
     {
+        if (dict.size() == 0)
+        {
+            stream << "{ }";
+            return stream;
+        }
         stream << "{";
         int idx = 0;
         for (const auto &[key, value] : dict.m_map)

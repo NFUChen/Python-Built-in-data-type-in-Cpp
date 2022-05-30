@@ -345,6 +345,11 @@ public:
     }
     friend std::ostream &operator<<(std::ostream &stream, const List &list)
     {
+        if (list.length() == 0)
+        {
+            stream << "[ ]";
+            return stream;
+        }
 
         stream << "[ ";
         int idx = 0;
