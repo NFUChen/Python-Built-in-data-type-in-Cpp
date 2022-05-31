@@ -116,7 +116,7 @@ public:
 
         while (value_count != 0)
         {
-            for (int idx = 0; idx <= m_vector.size() - 1; idx++)
+            for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
             {
                 if (m_vector.at(idx) == value)
                 {
@@ -138,7 +138,7 @@ public:
     {
         bool is_value_exist = false;
 
-        for (int idx = 0; idx <= m_vector.size() - 1; idx++)
+        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
         {
             if (m_vector.at(idx) == value)
             {
@@ -165,8 +165,10 @@ public:
         {
             end = m_vector.size() - 1;
         }
+        __raise_out_of_range_error__(m_vector, start);
+        __raise_out_of_range_error__(m_vector, end);
 
-        for (int idx = start; idx <= end; idx++)
+        for (std::size_t idx = start; idx <= end; idx++)
         {
             if (m_vector.at(idx) == searched_value)
             {
@@ -177,15 +179,15 @@ public:
         throw std::invalid_argument("value not found");
     }
 
-    T pop(int idx = -1)
+    T pop()
     {
-        if (idx == -1)
-        {
-            T popped_value = m_vector.at(m_vector.size() - 1);
-            m_vector.erase(m_vector.end() - 1);
-            return popped_value;
-        }
+        T popped_value = m_vector.at(m_vector.size() - 1);
+        m_vector.pop_back();
 
+        return popped_value;
+    }
+    T pop(std::size_t idx)
+    {
         T popped_value = m_vector.at(idx);
         m_vector.erase(m_vector.begin() + idx);
         return popped_value;
@@ -204,8 +206,11 @@ public:
         {
             end_idx = m_vector.size();
         }
+
+        __raise_out_of_range_error__(m_vector, begin_idx);
+
         std::vector<T> sliced_vector;
-        for (int idx = begin_idx; idx < end_idx; idx++)
+        for (std::size_t idx = begin_idx; idx < end_idx; idx++)
         {
             sliced_vector.push_back(m_vector.at(idx));
         }
@@ -232,7 +237,7 @@ public:
         static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
         std::string repr_ = "";
         std::string joined_string;
-        int idx = 0;
+        std::size_t idx = 0;
         for (const auto &value : m_vector)
         {
             if (idx == m_vector.size() - 1)
@@ -325,7 +330,7 @@ public:
             return false;
         }
 
-        for (int idx = 0; idx <= m_vector.size() - 1; idx++)
+        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
         {
             if (m_vector.at(idx) != _other_list.m_vector.at(idx))
             {
@@ -352,7 +357,7 @@ public:
         }
 
         stream << "[ ";
-        int idx = 0;
+        std::size_t idx = 0;
         for (const auto &value : list.m_vector)
         {
             stream << " " << value;

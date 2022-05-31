@@ -188,7 +188,7 @@ public:
             return stream;
         }
         stream << "{";
-        int idx = 0;
+        std::size_t idx = 0;
         for (const auto &[key, value] : dict.m_map)
         {
             stream << key << " : " << value;
