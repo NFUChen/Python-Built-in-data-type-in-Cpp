@@ -18,7 +18,7 @@ class List
 private:
     std::vector<T> m_vector;
 
-    void __throw_out_of_range_error__(const std::vector<T> &vector, const int &idx) const
+    void __raise_out_of_range_error__(const std::vector<T> &vector, const int &idx) const
     {
         if (idx > vector.size() - 1)
         {
@@ -32,11 +32,11 @@ private:
         if (idx < 0)
         {
             int negate_idx = (idx * -1);
-            __throw_out_of_range_error__(m_vector, negate_idx);
+            __raise_out_of_range_error__(m_vector, negate_idx);
             return m_vector.at(m_vector.size() - negate_idx); // list[-1] -> m_vector.back()
         }
 
-        __throw_out_of_range_error__(m_vector, idx);
+        __raise_out_of_range_error__(m_vector, idx);
 
         return m_vector.at(idx);
     }
@@ -46,11 +46,11 @@ private:
         if (idx < 0)
         {
             int negate_idx = (idx * -1);
-            __throw_out_of_range_error__(m_vector, negate_idx);
+            __raise_out_of_range_error__(m_vector, negate_idx);
             return m_vector.at(m_vector.size() - negate_idx); // list[-1] -> m_vector.back()
         }
 
-        __throw_out_of_range_error__(m_vector, idx);
+        __raise_out_of_range_error__(m_vector, idx);
 
         return m_vector.at(idx);
     }
