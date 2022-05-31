@@ -62,8 +62,7 @@ public:
   {
     if (!this->is_contains(value)) // not found
     {
-      std::string error_msg = std::to_string(value) + " not in set";
-      throw std::invalid_argument(error_msg);
+      throw std::invalid_argument("value not in set");
     }
 
     m_set.erase(value);
