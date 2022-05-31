@@ -13,8 +13,6 @@ class Dict
 {
 private:
     std::unordered_map<K, V> m_map;
-    std::vector<K> m_key_vecotr;
-    std::vector<V> m_value_vecotr;
 
     void __raise_key_not_exist_error__(const K &key) const
     {
