@@ -31,8 +31,8 @@ private:
 
         if (idx < 0)
         {
-            int negate_idx = (idx * -1);
-            __raise_out_of_range_error__(m_vector, negate_idx);
+            std::size_t negate_idx = (idx * -1);
+            __raise_out_of_range_error__(m_vector, negate_idx - 1);
             return m_vector.at(m_vector.size() - negate_idx); // list[-1] -> m_vector.back()
         }
 
@@ -45,8 +45,8 @@ private:
 
         if (idx < 0)
         {
-            int negate_idx = (idx * -1);
-            __raise_out_of_range_error__(m_vector, negate_idx);
+            std::size_t negate_idx = (idx * -1);
+            __raise_out_of_range_error__(m_vector, negate_idx - 1);
             return m_vector.at(m_vector.size() - negate_idx); // list[-1] -> m_vector.back()
         }
 
