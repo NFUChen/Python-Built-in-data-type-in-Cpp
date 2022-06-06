@@ -7,6 +7,7 @@
 #include <string>
 #include <stdexcept>
 #include <initializer_list>
+#include <cassert>
 
 template <class K, class V>
 class Dict
@@ -16,10 +17,9 @@ private:
 
     void __raise_key_not_exist_error__(const K &key) const
     {
-        if (!m_map.count(key))
-        {
-            throw std::invalid_argument("Key not in Dict");
-        }
+        assert(
+            ("Key not in Dict", m_map.count(key) )
+        );
     }
 
 public:
@@ -117,6 +117,13 @@ public:
     const V &get(const K &key) const
     {
         __raise_key_not_exist_error__(key);
+        return m_map[key];
+    }
+
+    const V &get(const K& key, const V& default_value) {
+        if (!m_map.count(key)) {
+            return default_value;
+        }
         return m_map[key];
     }
 

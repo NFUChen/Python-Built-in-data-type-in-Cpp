@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <functional>
 #include <type_traits>
+#include <cassert>
+
 #include "dictionary.h"
 #include "set.h"
 
@@ -20,10 +22,9 @@ private:
 
     void __raise_out_of_range_error__(const std::vector<T> &vector, const int &idx) const
     {
-        if (idx > vector.size() - 1)
-        {
-            throw std::out_of_range("List index out of bound");
-        }
+        assert(
+            ("List index out of range", !(idx > vector.size() - 1))
+        );
     }
 
     T &__setitem__(const int &idx)
