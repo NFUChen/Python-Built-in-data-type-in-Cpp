@@ -23,7 +23,7 @@ private:
     void __raise_out_of_range_error__(const std::vector<T> &vector, const int &idx) const
     {
         assert(
-            ("List index out of range", !(idx > vector.size() - 1))
+            ("List index out of range", idx <= vector.size() - 1)
         );
     }
 
@@ -57,6 +57,7 @@ private:
     }
 
 public:
+    
     // ----------------constructor----------------------
     List()
     {
@@ -96,10 +97,10 @@ public:
         m_vector.push_back(value);
     }
 
-    void extend(const List<T> &_other_list)
+    void extend(List<T> &_other_list)
     {
 
-        for (const T &value : _other_list.values())
+        for (const T &value : _other_list)
         {
             m_vector.push_back(value);
         }
@@ -340,15 +341,6 @@ public:
         }
         return true;
     }
-
-    std::vector<T> &values() // for iteration
-    {
-        return m_vector;
-    }
-    const std::vector<T> &values() const // for const value iteration
-    {
-        return m_vector;
-    }
     friend std::ostream &operator<<(std::ostream &stream, const List &list)
     {
         if (list.length() == 0)
@@ -372,6 +364,30 @@ public:
 
         stream << " ]";
         return stream;
+    }
+
+    // custom iterator
+    typedef typename std::vector<T>::iterator iterator;
+    typedef typename std::vector<T>::const_iterator const_iterator;
+
+    iterator begin()
+    {
+        return m_vector.begin();
+    }
+
+    iterator end()
+    {
+        return m_vector.end();
+    }
+
+    const_iterator cbegin() const
+    {
+        return m_vector.cbegin();
+    }
+
+    const_iterator cend() const
+    {
+        return m_vector.cend();
     }
 };
 
