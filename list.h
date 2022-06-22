@@ -97,10 +97,10 @@ public:
         m_vector.push_back(value);
     }
 
-    void extend(List<T> &_other_list)
+    void extend(const List<T> &_other_list)
     {
 
-        for (const T &value : _other_list)
+        for (const T &value : _other_list.values())
         {
             m_vector.push_back(value);
         }
@@ -341,29 +341,14 @@ public:
         }
         return true;
     }
-    friend std::ostream &operator<<(std::ostream &stream, const List &list)
+
+    std::vector<T> &values() // for iteration
     {
-        if (list.length() == 0)
-        {
-            stream << "[ ]";
-            return stream;
-        }
-
-        stream << "[ ";
-        std::size_t idx = 0;
-        for (const auto &value : list.m_vector)
-        {
-            stream << " " << value;
-            if (idx == list.length() - 1)
-            {
-                continue;
-            }
-            stream << ", ";
-            idx += 1;
-        }
-
-        stream << " ]";
-        return stream;
+        return m_vector;
+    }
+    const std::vector<T> &values() const // for const value iteration
+    {
+        return m_vector;
     }
 
     // custom iterator
@@ -388,6 +373,31 @@ public:
     const_iterator cend() const
     {
         return m_vector.cend();
+    }
+
+    friend std::ostream &operator<<(std::ostream &stream, const List &list)
+    {
+        if (list.length() == 0)
+        {
+            stream << "[ ]";
+            return stream;
+        }
+
+        stream << "[ ";
+        std::size_t idx = 0;
+        for (const auto &value : list.m_vector)
+        {
+            stream << " " << value;
+            if (idx == list.length() - 1)
+            {
+                continue;
+            }
+            stream << ", ";
+            idx += 1;
+        }
+
+        stream << " ]";
+        return stream;
     }
 };
 

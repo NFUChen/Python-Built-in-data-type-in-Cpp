@@ -187,6 +187,30 @@ public:
         return m_map;
     }
 
+    // custom iterator
+    typedef typename std::unordered_map<K, V>::iterator iterator;
+    typedef typename std::unordered_map<K, V>::const_iterator const_iterator;
+
+    iterator begin()
+    {
+        return m_map.begin();
+    }
+
+    iterator end()
+    {
+        return m_map.end();
+    }
+
+    const_iterator cbegin() const
+    {
+        return m_map.cbegin();
+    }
+
+    const_iterator cend() const
+    {
+        return m_map.cend();
+    }
+
     friend std::ostream &operator<<(std::ostream &stream, const Dict<K, V> &dict)
     {
         if (dict.size() == 0)

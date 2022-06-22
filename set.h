@@ -151,6 +151,30 @@ public:
     return true;
   }
 
+  // custom iterator
+  typedef typename std::set<T>::iterator iterator;
+  typedef typename std::set<T>::const_iterator const_iterator;
+
+  iterator begin()
+  {
+    return m_set.begin();
+  }
+
+  iterator end()
+  {
+    return m_set.end();
+  }
+
+  const_iterator cbegin() const
+  {
+    return m_set.cbegin();
+  }
+
+  const_iterator cend() const
+  {
+    return m_set.cend();
+  }
+
   friend std::ostream &
   operator<<(std::ostream &stream, const Set<T> &set)
   {
