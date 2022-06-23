@@ -14,6 +14,7 @@
 #include "dictionary.h"
 #include "set.h"
 
+
 template <class T>
 class List
 {
@@ -23,7 +24,7 @@ private:
     void __raise_out_of_range_error__(const std::vector<T> &vector, const int &idx) const
     {
         assert(
-            ("List index out of range", idx <= vector.size() - 1)
+            ("List index out of range", (idx <= vector.size() - 1) || (idx < 0))
         );
     }
 
@@ -105,7 +106,14 @@ public:
             m_vector.push_back(value);
         }
     }
-
+    void extend(const std::initializer_list<T> &init)
+    {
+        for (const T& value: init) 
+        {
+            m_vector.push_back(value);
+        }
+    }
+    
     void insert(const int &index, const T &value)
     {
         m_vector.insert(m_vector.begin() + index, value);
@@ -156,7 +164,7 @@ public:
         }
     }
 
-    int index(const T &searched_value, int start = -1, int end = -1) const
+    std::size_t index(const T &searched_value, int start = -1, int end = -1) const
     {
 
         if (start == -1)
@@ -210,6 +218,7 @@ public:
         }
 
         __raise_out_of_range_error__(m_vector, begin_idx);
+        __raise_out_of_range_error__(m_vector, end_idx);
 
         std::vector<T> sliced_vector;
         for (std::size_t idx = begin_idx; idx < end_idx; idx++)
@@ -223,7 +232,7 @@ public:
     }
     List<std::string> map_to_string()
     {
-        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
+        assert( ("Integral or floating types required" , std::is_arithmetic_v<T>) );
         List<std::string> string_list;
         for (const auto &value : m_vector)
         {
@@ -236,7 +245,7 @@ public:
 
     std::string join(const std::string &delimeter) const
     {
-        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
+        assert( ("Integral or floating types required" , std::is_arithmetic_v<T>) );
         std::string repr_ = "";
         std::string joined_string;
         std::size_t idx = 0;
@@ -270,7 +279,7 @@ public:
     {
         std::sort(m_vector.begin(), m_vector.end());
     }
-    void sort(const std::function<bool(const T &list_x, const T &list_y)> &compare_func)
+    void sort(const std::function<bool(const T & x, const T & y)> &compare_func)
     {
         std::sort(m_vector.begin(), m_vector.end(), compare_func);
     }
@@ -398,6 +407,52 @@ public:
 
         stream << " ]";
         return stream;
+    }
+
+    // arithimetic functions
+    T min()
+    {
+        T temp_min = m_vector.at(0);
+        for (const T& value: m_vector) {
+            if (value < temp_min)
+            {
+                temp_min = value;
+            }
+        }
+
+        return temp_min;
+    }
+    T max()
+    {
+        T temp_max = m_vector.at(0);
+        for (const T &value : m_vector)
+        {
+            if (value > temp_max)
+            {
+                temp_max = value;
+            }
+        }
+
+        return temp_max;
+    }
+
+    T sum() {
+        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
+        T sum = 0;
+        for (const T& value: m_vector) {
+            sum += value;
+        }
+
+        return sum;
+    }
+
+    long double mean()
+    {
+        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
+        
+        long double avg = (this->sum() / static_cast<double>(m_vector.size()) );
+
+        return avg;
     }
 };
 
