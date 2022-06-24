@@ -256,8 +256,12 @@ public:
 
         return repr_;
     }
+    std::size_t size() const
+    {
+        return m_vector.size();
+    }
 
-    int length() const
+    std::size_t length() const
     {
         return m_vector.size();
     }
@@ -385,8 +389,7 @@ public:
     {
         return m_vector.cend();
     }
-
-    friend std::ostream &operator<<(std::ostream &stream, const List &list)
+    friend std::ostream &operator<<(std::ostream &stream, const List<T> &list)
     {
         if (list.length() == 0)
         {
@@ -394,22 +397,29 @@ public:
             return stream;
         }
 
-        stream << "[ ";
+        stream << "[";
+
         std::size_t idx = 0;
-        for (const auto &value : list.m_vector)
+        for (const T &value : list.m_vector)
         {
-            stream << " " << value;
+            if (typeid(T) == typeid(char)) {
+                stream << " " << "'" << value << "'";
+            } else {
+                stream << " " << value;
+            }
+            
             if (idx == list.length() - 1)
             {
                 continue;
             }
-            stream << ", ";
+            stream << ",";
             idx += 1;
         }
 
-        stream << " ]";
+        stream << "]";
         return stream;
     }
+    
 
     // arithimetic functions
     T min()

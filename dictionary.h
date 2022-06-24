@@ -49,7 +49,11 @@ public:
         return (m_map.count(key));
     }
 
-    int size() const
+    std::size_t size() const
+    {
+        return m_map.size();
+    }
+    std::size_t length() const 
     {
         return m_map.size();
     }
@@ -227,7 +231,7 @@ public:
         return m_map.cend();
     }
 
-    friend std::ostream &operator<<(std::ostream &stream, const Dict<K, V> &dict)
+    friend std::ostream & operator<<(std::ostream &stream, const Dict<K, V> &dict)
     {
         if (dict.size() == 0)
         {

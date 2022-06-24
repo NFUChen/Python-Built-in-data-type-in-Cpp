@@ -33,9 +33,13 @@ public:
 
   // -------------------------------------------------
 
-  int size() const
+  std::size_t size() const
   {
+    return m_set.size();
+  }
 
+  std::size_t length() const
+  {
     return m_set.size();
   }
   Set<T> copy() const
@@ -178,8 +182,7 @@ public:
     return m_set.cend();
   }
 
-  friend std::ostream &
-  operator<<(std::ostream &stream, const Set<T> &set)
+  friend std::ostream & operator<<(std::ostream &stream, const Set<T> &set)
   {
     if (set.size() == 0)
     {
@@ -188,10 +191,25 @@ public:
     }
     stream << "{";
 
+    std::size_t idx = 0;
     for (const T &value : set.m_set)
     {
+      if (typeid(T) == typeid(char))
+      {
+        stream << " "
+               << "'" << value << "'";
+      }
+      else
+      {
+        stream << " " << value;
+      }
 
-      stream << value << ", ";
+      if (idx == set.size() - 1)
+      {
+        continue;
+      }
+      stream << ",";
+      idx += 1;
     }
 
     stream << "}";
