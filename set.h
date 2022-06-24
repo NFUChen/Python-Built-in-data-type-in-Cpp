@@ -18,22 +18,19 @@ public:
   Set()
   {
   }
-
-  Set(const std::vector<T> &vector)
-  {
-    for (const T &value : vector)
-    {
-      m_set.insert(value);
-    }
-  }
-  Set(const std::set<T> &set)
-      : m_set(set)
-  {
-  }
   Set(const std::initializer_list<T> &init)
       : m_set(init)
   {
   }
+  template <typename Container>
+  Set(const Container &container)
+  {
+    for (const auto &value : container)
+    {
+      m_set.insert(value);
+    }
+  }
+
   // -------------------------------------------------
 
   int size() const
@@ -43,9 +40,7 @@ public:
   }
   Set<T> copy() const
   {
-    Set<T> copy_set(m_set);
-
-    return copy_set;
+    return Set<T>(m_set);
   }
 
   bool is_contains(const T &value) const
@@ -164,7 +159,15 @@ public:
   {
     return m_set.end();
   }
+  const_iterator begin() const
+  {
+    return m_set.begin();
+  }
 
+  const_iterator end() const
+  {
+    return m_set.end();
+  }
   const_iterator cbegin() const
   {
     return m_set.cbegin();

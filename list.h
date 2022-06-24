@@ -14,7 +14,6 @@
 #include "dictionary.h"
 #include "set.h"
 
-
 template <class T>
 class List
 {
@@ -24,8 +23,7 @@ private:
     void __raise_out_of_range_error__(const std::vector<T> &vector, const int &idx) const
     {
         assert(
-            ("List index out of range", (idx <= vector.size() - 1) || (idx < 0))
-        );
+            ("List index out of range", (idx <= vector.size() - 1) || (idx < 0)));
     }
 
     T &__setitem__(const int &idx)
@@ -58,8 +56,6 @@ private:
     }
 
 public:
-    
-    // ----------------constructor----------------------
     List()
     {
     }
@@ -67,25 +63,17 @@ public:
         : m_vector(init)
     {
     }
-    List(const std::vector<T> &vector)
-        : m_vector(vector)
+    template <typename Container>
+    List(const Container &container)
     {
-    }
-    List(const std::set<T> &set)
-    {
-        for (const T &value : set)
+        for (const auto &value : container)
         {
             m_vector.push_back(value);
         }
     }
-    // -------------------------------------------------
-
     List<T> copy() const
     {
-
-        List<T> copy_list(m_vector);
-
-        return copy_list;
+        return List<T>(m_vector);
     }
     void clear()
     {
@@ -108,12 +96,12 @@ public:
     }
     void extend(const std::initializer_list<T> &init)
     {
-        for (const T& value: init) 
+        for (const T &value : init)
         {
             m_vector.push_back(value);
         }
     }
-    
+
     void insert(const int &index, const T &value)
     {
         m_vector.insert(m_vector.begin() + index, value);
@@ -232,7 +220,9 @@ public:
     }
     List<std::string> map_to_string()
     {
-        assert( ("Integral or floating types required" , std::is_arithmetic_v<T>) );
+        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
+        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
+
         List<std::string> string_list;
         for (const auto &value : m_vector)
         {
@@ -245,7 +235,9 @@ public:
 
     std::string join(const std::string &delimeter) const
     {
-        assert( ("Integral or floating types required" , std::is_arithmetic_v<T>) );
+        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
+        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
+
         std::string repr_ = "";
         std::string joined_string;
         std::size_t idx = 0;
@@ -279,7 +271,7 @@ public:
     {
         std::sort(m_vector.begin(), m_vector.end());
     }
-    void sort(const std::function<bool(const T & x, const T & y)> &compare_func)
+    void sort(const std::function<bool(const T &x, const T &y)> &compare_func)
     {
         std::sort(m_vector.begin(), m_vector.end(), compare_func);
     }
@@ -374,6 +366,16 @@ public:
         return m_vector.end();
     }
 
+    const_iterator begin() const
+    {
+        return m_vector.begin();
+    }
+
+    const_iterator end() const
+    {
+        return m_vector.end();
+    }
+
     const_iterator cbegin() const
     {
         return m_vector.cbegin();
@@ -413,7 +415,8 @@ public:
     T min()
     {
         T temp_min = m_vector.at(0);
-        for (const T& value: m_vector) {
+        for (const T &value : m_vector)
+        {
             if (value < temp_min)
             {
                 temp_min = value;
@@ -436,10 +439,13 @@ public:
         return temp_max;
     }
 
-    T sum() {
+    T sum()
+    {
         assert(("Integral or floating types required", std::is_arithmetic_v<T>));
+        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
         T sum = 0;
-        for (const T& value: m_vector) {
+        for (const T &value : m_vector)
+        {
             sum += value;
         }
 
@@ -449,8 +455,9 @@ public:
     long double mean()
     {
         assert(("Integral or floating types required", std::is_arithmetic_v<T>));
-        
-        long double avg = (this->sum() / static_cast<double>(m_vector.size()) );
+        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
+
+        long double avg = (this->sum() / static_cast<double>(m_vector.size()));
 
         return avg;
     }
