@@ -57,12 +57,10 @@ private:
 
 public:
     List()
-    {
-    }
+    {}
     List(const std::initializer_list<T> &init)
         : m_vector(init)
-    {
-    }
+    {}
     template <typename Container>
     List(const Container &container)
     {
@@ -102,34 +100,27 @@ public:
         }
     }
 
-    void insert(const int &index, const T &value)
+    void insert(const std::size_t &index, const T &value)
     {
         m_vector.insert(m_vector.begin() + index, value);
     }
 
     void remove_value_along_with_duplicates(const T &value)
     {
-        bool is_value_exist = false;
-        int value_count = this->count(value);
 
-        while (value_count != 0)
-        {
-            for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
-            {
-                if (m_vector.at(idx) == value)
-                {
-                    is_value_exist = true;
-                    m_vector.erase(m_vector.begin() + idx);
-                    value_count -= 1;
-                    break;
-                }
+        bool is_value_exist = false;
+        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++) {
+            if (m_vector.at(idx) == value) {
+                if (!is_value_exist) is_value_exist = true;
+                m_vector.erase(m_vector.begin() + idx);
+                idx -= 1;
             }
         }
-
         if (!is_value_exist)
         {
             throw std::invalid_argument("value not in list");
         }
+
     }
 
     void remove(const T &value)
@@ -191,7 +182,7 @@ public:
         return popped_value;
     }
 
-    List<T> slice(const int &begin_idx = -1, int end_idx = -1) const
+    List<T> slice(const std::size_t &begin_idx = -1, std::size_t end_idx = -1) const
     {
         // e.g. [1,2,3,4,5].slice() -> [1,2,3,4,5]
         // e.g. [1,2,3,4,5].slice(1, 4) -> [2,3,4]

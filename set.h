@@ -14,14 +14,11 @@ private:
   std::set<T> m_set;
 
 public:
-  // ----------------constructor----------------------
   Set()
-  {
-  }
+  {}
   Set(const std::initializer_list<T> &init)
       : m_set(init)
-  {
-  }
+  {}
   template <typename Container>
   Set(const Container &container)
   {
@@ -30,8 +27,6 @@ public:
       m_set.insert(value);
     }
   }
-
-  // -------------------------------------------------
 
   std::size_t size() const
   {

@@ -25,16 +25,13 @@ private:
 public:
     // ----------------constructor----------------------
     Dict()
-    {
-    }
+    {}
     Dict(const std::initializer_list<std::pair<const K, V>> &init)
         : m_map(init)
-    {
-    }
+    {}
     Dict(const std::unordered_map<K, V> &map)
         : m_map(map)
-    {
-    }
+    {}
     Dict(const std::map<K, V> &map)
     {
         for (const auto &[key, value] : map)
