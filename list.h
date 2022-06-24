@@ -307,10 +307,20 @@ public:
 
         return this->__getitem__(idx);
     }
-    List<T> operator+(const List<T> &_other_list) const
+    template <typename Container>
+    List<T> operator+(const Container & container) const
     {
         List<T> copy_list = this->copy();
-        copy_list.extend(_other_list);
+        copy_list.extend(container);
+
+        return copy_list;
+    }
+    List<T> operator*(const std::size_t& times) const
+    {
+        List<T> copy_list;
+        for (std::size_t idx =0; idx < times; idx++) {
+            copy_list.extend(m_vector);
+        }
 
         return copy_list;
     }
