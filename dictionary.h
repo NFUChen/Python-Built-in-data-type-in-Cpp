@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -18,8 +19,7 @@ private:
     void __raise_key_not_exist_error__(const K &key) const
     {
         assert(
-            ("Key not in Dict", m_map.count(key) )
-        );
+            ("Key not in Dict", m_map.count(key)));
     }
 
 public:
@@ -32,8 +32,15 @@ public:
     {
     }
     Dict(const std::unordered_map<K, V> &map)
+        : m_map(map)
     {
-        m_map = map;
+    }
+    Dict(const std::map<K, V> &map)
+    {
+        for (const auto &[key, value] : map)
+        {
+            m_map[key] = value;
+        }
     }
     // -------------------------------------------------
 
@@ -54,9 +61,7 @@ public:
 
     Dict<K, V> copy() const
     {
-        Dict<K, V> copy_dict(m_map);
-
-        return copy_dict;
+        return Dict<K, V>(m_map);
     }
 
     V pop(const K &key)
@@ -120,8 +125,10 @@ public:
         return m_map[key];
     }
 
-    const V &get(const K& key, const V& default_value) {
-        if (!m_map.count(key)) {
+    const V &get(const K &key, const V &default_value)
+    {
+        if (!m_map.count(key))
+        {
             return default_value;
         }
         return m_map[key];
@@ -197,6 +204,15 @@ public:
     }
 
     iterator end()
+    {
+        return m_map.end();
+    }
+    const_iterator begin() const
+    {
+        return m_map.begin();
+    }
+
+    const_iterator end() const
     {
         return m_map.end();
     }
