@@ -22,7 +22,7 @@ public:
   template <typename Container>
   Set(const Container &container)
   {
-    for (const auto &value : container)
+    for (const T &value : container)
     {
       m_set.insert(value);
     }
@@ -72,31 +72,33 @@ public:
     m_set.clear();
   }
 
-  void update(const Set<T> &_other_set)
+  template <typename Container>
+  void update(const Container &container)
   // The update() method updates the current set, by adding items from another set (or any other iterable).
   // If an item is present in both sets,
   // only one appearance of this item will be present in the updated set.
   {
-    for (const T &value : _other_set.values())
+    for (const T &value : container)
     {
       m_set.insert(value);
     }
   }
-
-  Set<T> union_with(const Set<T> &_other_set) const
+  template <typename Container>
+  Set<T> union_with(const Container &container) const
   {
     Set<T> union_set(m_set);
-    for (const T &value : _other_set.values())
+    for (const T &value : container)
     {
       union_set.add(value);
     }
     return union_set;
   }
 
-  Set<T> difference_with(const Set<T> &_other_set) const
+  template <typename Container>
+  Set<T> difference_with(const Container &container) const
   {
     Set<T> difference_set(m_set);
-    for (const T &value : _other_set.values())
+    for (const T &value : container)
     {
       if (difference_set.is_contains(value)) // if find
       {
@@ -106,27 +108,17 @@ public:
 
     return difference_set;
   }
-  Set<T> intersection_with(const Set<T> &_other_set) const
+  template <typename Container>
+  Set<T> intersection_with(const Container &container) const
   {
     Set<T> intersection_set;
-    for (const T &self_value : m_set)
+    for (const T& value : container)
     {
-      if (_other_set.is_contains(self_value))
-      {
-        intersection_set.add(self_value);
+      if (this->is_contains(value)) {
+        intersection_set.add(value);
       }
     }
-
     return intersection_set;
-  }
-
-  std::set<T> &values() // for iteration
-  {
-    return m_set;
-  }
-  const std::set<T> &values() const // for const value iteration
-  {
-    return m_set;
   }
   bool operator==(const Set<T> &_other_set) const
   {

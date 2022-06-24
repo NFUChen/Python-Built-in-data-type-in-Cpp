@@ -64,7 +64,7 @@ public:
     template <typename Container>
     List(const Container &container)
     {
-        for (const auto &value : container)
+        for (const T &value : container)
         {
             m_vector.push_back(value);
         }
@@ -83,11 +83,10 @@ public:
 
         m_vector.push_back(value);
     }
-
-    void extend(const List<T> &_other_list)
+    template <typename Container>
+    void extend(const Container &container)
     {
-
-        for (const T &value : _other_list.values())
+        for (const T &value : container)
         {
             m_vector.push_back(value);
         }
@@ -146,14 +145,9 @@ public:
     std::size_t index(const T &searched_value, int start = -1, int end = -1) const
     {
 
-        if (start == -1)
-        {
-            start = 0;
-        }
-        if (end == -1)
-        {
-            end = m_vector.size() - 1;
-        }
+        if (start == -1) start = 0;
+        if (end == -1) end = m_vector.size() - 1;
+
         __raise_out_of_range_error__(m_vector, start);
         __raise_out_of_range_error__(m_vector, end);
 
@@ -336,15 +330,6 @@ public:
             }
         }
         return true;
-    }
-
-    std::vector<T> &values() // for iteration
-    {
-        return m_vector;
-    }
-    const std::vector<T> &values() const // for const value iteration
-    {
-        return m_vector;
     }
 
     // custom iterator
