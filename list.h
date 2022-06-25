@@ -1,7 +1,6 @@
 #ifndef LIST_H
 #define LIST_H
 #include <iostream>
-#include <concepts>
 #include <initializer_list>
 #include <vector>
 #include <set>
@@ -90,7 +89,6 @@ public:
 
     void append(const T &value)
     {
-
         m_vector.push_back(value);
     }
     template <typename Container>
@@ -213,9 +211,7 @@ public:
             sliced_vector.push_back(m_vector.at(idx));
         }
 
-        List<T> sliced_list(sliced_vector);
-
-        return sliced_list;
+        return List<T>(sliced_vector);
     }
     std::size_t size() const
     {
@@ -246,26 +242,24 @@ public:
         std::reverse(m_vector.begin(), m_vector.end());
     }
     template <typename ReturnedType>
-    List<ReturnedType> map(const std::function<ReturnedType(T &)> &map_callback)
+    List<ReturnedType> map(const std::function<ReturnedType(T)> &map_callback) const
     {
-        List<ReturnedType> copy_list;
+        std::vector<ReturnedType> copy_vector;
         for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
         {
-            copy_list.append(
+            copy_vector.push_back(
                 map_callback(m_vector.at(idx)));
         }
-        return copy_list;
+        return List<ReturnedType>(copy_vector);
     }
-    List<T> map(const std::function<T(T &)> &map_callback)
+    List<T> map(const std::function<T(T)> &map_callback) const
     {
         return this->map<T>(map_callback);
     }
-
-    void transform(const std::function<T(T &)> &transform_callback)
+    void for_each(const std::function<void(T&)>& transform_callback)
     {
-        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
-        {
-            m_vector.at(idx) = transform_callback(m_vector.at(idx));
+        for (T& value: m_vector) {
+            transform_callback(value);
         }
     }
 
