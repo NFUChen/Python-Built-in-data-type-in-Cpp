@@ -10,6 +10,8 @@
 #include <initializer_list>
 #include <cassert>
 
+#include "list.h"
+
 template <class K, class V>
 class Dict
 {
@@ -202,7 +204,7 @@ public:
     {
         return m_map.cend();
     }
-    std::vector<V> values() const // for iteration
+    List<V> values() const // for iteration
     {
         std::vector<V> value_vector;
         for (const auto &[_, value] : m_map)
@@ -210,10 +212,10 @@ public:
             value_vector.push_back(value);
         }
 
-        return value_vector;
+        return List<V>(value_vector);
     }
 
-    std::vector<K> keys() const // for iteration
+    List<K> keys() const // for iteration
     {
         std::vector<K> key_vector;
         for (const auto &[key, _] : m_map)
@@ -221,7 +223,7 @@ public:
             key_vector.push_back(key);
         }
 
-        return key_vector;
+        return List<K>(key_vector);
     }
 
     const std::unordered_map<K, V> &items() const // for iteration
