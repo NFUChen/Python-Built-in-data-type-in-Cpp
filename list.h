@@ -11,6 +11,8 @@
 #include <type_traits>
 #include <cassert>
 
+
+
 template <class T>
 class List
 {
@@ -171,7 +173,7 @@ public:
             }
         }
 
-        throw std::invalid_argument("value not found");
+        __raise_value_not_found_error__();
     }
 
     T pop()
@@ -242,7 +244,7 @@ public:
         std::reverse(m_vector.begin(), m_vector.end());
     }
     template <typename ReturnedType>
-    List<ReturnedType> map(const std::function<ReturnedType(T)> &map_callback) const
+    List<ReturnedType> map(const std::function<ReturnedType(const T&)> &map_callback) const
     {
         std::vector<ReturnedType> copy_vector;
         for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
@@ -252,13 +254,15 @@ public:
         }
         return List<ReturnedType>(copy_vector);
     }
-    List<T> map(const std::function<T(T)> &map_callback) const
+    List<T> map(const std::function<T(const T&)> &map_callback) const
     {
-        return this->map<T>(map_callback);
+        return this->map<const T&>(map_callback);
     }
     void for_each(const std::function<void(T&)>& transform_callback)
     {
-        for (T& value: m_vector) {
+
+        for (T &value : m_vector)
+        {
             transform_callback(value);
         }
     }
@@ -278,16 +282,15 @@ public:
     }
     bool is_all(const T &checked_value)
     {
-        int count = 0;
         for (const T &value : m_vector)
         {
-            if (value == checked_value)
+            if (value != checked_value)
             {
-                count += 1;
+                return false;
             }
         }
 
-        return (count == m_vector.size());
+        return true;
     }
 
     T &operator[](const int &idx) // setter
@@ -369,6 +372,11 @@ public:
     {
         return m_vector.cend();
     }
+
+    const std::vector<T> values() const{
+        return m_vector;
+    }
+
     friend std::ostream &operator<<(std::ostream &stream, const List<T> &list)
     {
         if (list.length() == 0)

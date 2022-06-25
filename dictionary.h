@@ -168,32 +168,7 @@ public:
         }
         return true;
     }
-    std::vector<V> values() const // for iteration
-    {
-        std::vector<V> value_vector;
-        for (const auto &[_, value] : m_map)
-        {
-            value_vector.push_back(value);
-        }
-
-        return value_vector;
-    }
-
-    std::vector<K> keys() const // for iteration
-    {
-        std::vector<K> key_vector;
-        for (const auto &[key, _] : m_map)
-        {
-            key_vector.push_back(key);
-        }
-
-        return key_vector;
-    }
-
-    const std::unordered_map<K, V> &items() const // for iteration
-    {
-        return m_map;
-    }
+    
 
     // custom iterator
     typedef typename std::unordered_map<K, V>::iterator iterator;
@@ -226,6 +201,32 @@ public:
     const_iterator cend() const
     {
         return m_map.cend();
+    }
+    std::vector<V> values() const // for iteration
+    {
+        std::vector<V> value_vector;
+        for (const auto &[_, value] : m_map)
+        {
+            value_vector.push_back(value);
+        }
+
+        return value_vector;
+    }
+
+    std::vector<K> keys() const // for iteration
+    {
+        std::vector<K> key_vector;
+        for (const auto &[key, _] : m_map)
+        {
+            key_vector.push_back(key);
+        }
+
+        return key_vector;
+    }
+
+    const std::unordered_map<K, V> &items() const // for iteration
+    {
+        return m_map;
     }
 
     friend std::ostream & operator<<(std::ostream &stream, const Dict<K, V> &dict)

@@ -172,6 +172,10 @@ public:
   {
     return m_set.cend();
   }
+  const std::set<T> values() const
+  {
+    return m_set;
+  }
 
   friend std::ostream & operator<<(std::ostream &stream, const Set<T> &set)
   {
