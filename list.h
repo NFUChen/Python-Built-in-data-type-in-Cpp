@@ -1,6 +1,7 @@
 #ifndef LIST_H
 #define LIST_H
 #include <iostream>
+#include <concepts>
 #include <initializer_list>
 #include <vector>
 #include <set>
@@ -10,9 +11,6 @@
 #include <functional>
 #include <type_traits>
 #include <cassert>
-
-#include "dictionary.h"
-#include "set.h"
 
 template <class T>
 class List
@@ -24,6 +22,16 @@ private:
     {
         assert(
             ("List index out of range", (idx <= vector.size() - 1) || (idx < 0)));
+    }
+    void __raise_value_not_found_error__() const
+    {
+        throw std::invalid_argument("value not in list");
+    }
+
+    void __assert_is_arithmetic_type__()
+    {
+        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
+        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
     }
 
     T &__setitem__(const int &idx)
@@ -57,10 +65,12 @@ private:
 
 public:
     List()
-    {}
+    {
+    }
     List(const std::initializer_list<T> &init)
         : m_vector(init)
-    {}
+    {
+    }
     template <typename Container>
     List(const Container &container)
     {
@@ -108,18 +118,20 @@ public:
     {
 
         bool is_value_exist = false;
-        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++) {
-            if (m_vector.at(idx) == value) {
-                if (!is_value_exist) is_value_exist = true;
+        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
+        {
+            if (m_vector.at(idx) == value)
+            {
+                if (!is_value_exist)
+                    is_value_exist = true;
                 m_vector.erase(m_vector.begin() + idx);
                 idx -= 1;
             }
         }
         if (!is_value_exist)
         {
-            throw std::invalid_argument("value not in list");
+            __raise_value_not_found_error__();
         }
-
     }
 
     void remove(const T &value)
@@ -138,15 +150,17 @@ public:
 
         if (!is_value_exist)
         {
-            throw std::invalid_argument("value not in list");
+            __raise_value_not_found_error__();
         }
     }
 
-    std::size_t index(const T &searched_value, int start = -1, int end = -1) const
+    std::size_t index(const T &searched_value, std::size_t start = std::string::npos, std::size_t end = std::string::npos) const
     {
 
-        if (start == -1) start = 0;
-        if (end == -1) end = m_vector.size() - 1;
+        if (start == std::string::npos)
+            start = 0;
+        if (end == std::string::npos)
+            end = m_vector.size() - 1;
 
         __raise_out_of_range_error__(m_vector, start);
         __raise_out_of_range_error__(m_vector, end);
@@ -176,16 +190,16 @@ public:
         return popped_value;
     }
 
-    List<T> slice(const std::size_t &begin_idx = -1, std::size_t end_idx = -1) const
+    List<T> slice(const std::size_t &begin_idx = std::string::npos, std::size_t end_idx = std::string::npos) const
     {
         // e.g. [1,2,3,4,5].slice() -> [1,2,3,4,5]
         // e.g. [1,2,3,4,5].slice(1, 4) -> [2,3,4]
-        if (begin_idx == -1 && end_idx == -1)
+        if (begin_idx == std::string::npos && end_idx == std::string::npos)
         {
             return this->copy();
         }
 
-        if (end_idx == -1)
+        if (end_idx == std::string::npos)
         {
             end_idx = m_vector.size();
         }
@@ -202,44 +216,6 @@ public:
         List<T> sliced_list(sliced_vector);
 
         return sliced_list;
-    }
-    List<std::string> map_to_string()
-    {
-        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
-        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
-
-        List<std::string> string_list;
-        for (const auto &value : m_vector)
-        {
-
-            string_list.append(std::to_string(value));
-        }
-
-        return string_list;
-    }
-
-    std::string join(const std::string &delimeter) const
-    {
-        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
-        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
-
-        std::string repr_ = "";
-        std::string joined_string;
-        std::size_t idx = 0;
-        for (const auto &value : m_vector)
-        {
-            if (idx == m_vector.size() - 1)
-            {
-                continue;
-            }
-            idx += 1;
-
-            joined_string = std::to_string(value) + delimeter;
-
-            repr_ += joined_string;
-        }
-
-        return repr_;
     }
     std::size_t size() const
     {
@@ -268,6 +244,29 @@ public:
     void reverse()
     {
         std::reverse(m_vector.begin(), m_vector.end());
+    }
+    template <typename ReturnedType>
+    List<ReturnedType> map(const std::function<ReturnedType(T &)> &map_callback)
+    {
+        List<ReturnedType> copy_list;
+        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
+        {
+            copy_list.append(
+                map_callback(m_vector.at(idx)));
+        }
+        return copy_list;
+    }
+    List<T> map(const std::function<T(T &)> &map_callback)
+    {
+        return this->map<T>(map_callback);
+    }
+
+    void transform(const std::function<T(T &)> &transform_callback)
+    {
+        for (std::size_t idx = 0; idx <= m_vector.size() - 1; idx++)
+        {
+            m_vector.at(idx) = transform_callback(m_vector.at(idx));
+        }
     }
 
     int count(const T &value) const
@@ -308,17 +307,18 @@ public:
         return this->__getitem__(idx);
     }
     template <typename Container>
-    List<T> operator+(const Container & container) const
+    List<T> operator+(const Container &container) const
     {
         List<T> copy_list = this->copy();
         copy_list.extend(container);
 
         return copy_list;
     }
-    List<T> operator*(const std::size_t& times) const
+    List<T> operator*(const std::size_t &times) const
     {
         List<T> copy_list;
-        for (std::size_t idx =0; idx < times; idx++) {
+        for (std::size_t idx = 0; idx < times; idx++)
+        {
             copy_list.extend(m_vector);
         }
 
@@ -388,12 +388,16 @@ public:
         std::size_t idx = 0;
         for (const T &value : list.m_vector)
         {
-            if (typeid(T) == typeid(char)) {
-                stream << " " << "'" << value << "'";
-            } else {
+            if (typeid(T) == typeid(char))
+            {
+                stream << " "
+                       << "'" << value << "'";
+            }
+            else
+            {
                 stream << " " << value;
             }
-            
+
             if (idx == list.length() - 1)
             {
                 continue;
@@ -405,7 +409,6 @@ public:
         stream << "]";
         return stream;
     }
-    
 
     // arithimetic functions
     T min()
@@ -434,11 +437,9 @@ public:
 
         return temp_max;
     }
-
     T sum()
     {
-        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
-        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
+        __assert_is_arithmetic_type__();
         T sum = 0;
         for (const T &value : m_vector)
         {
@@ -447,12 +448,9 @@ public:
 
         return sum;
     }
-
     long double mean()
     {
-        assert(("Integral or floating types required", std::is_arithmetic_v<T>));
-        static_assert(std::is_arithmetic_v<T>, "Integral or floating types required");
-
+        __assert_is_arithmetic_type__();
         long double avg = (this->sum() / static_cast<double>(m_vector.size()));
 
         return avg;

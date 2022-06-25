@@ -6,12 +6,16 @@
 #include <vector>
 #include <set>
 #include <initializer_list>
-#include "list.h"
+
 template <class T>
 class Set
 {
 private:
   std::set<T> m_set;
+  void __raise_value_not_found_error__() const
+  {
+    throw std::invalid_argument("value not in set");
+  }
 
 public:
   Set()
@@ -56,7 +60,7 @@ public:
   {
     if (!this->is_contains(value)) // not found
     {
-      throw std::invalid_argument("value not in set");
+      __raise_value_not_found_error__();
     }
 
     m_set.erase(value);
@@ -78,7 +82,7 @@ public:
   // If an item is present in both sets,
   // only one appearance of this item will be present in the updated set.
   {
-    for (const T &value : container)
+    for (const T& value : container)
     {
       m_set.insert(value);
     }
@@ -87,7 +91,7 @@ public:
   Set<T> union_with(const Container &container) const
   {
     Set<T> union_set(m_set);
-    for (const T &value : container)
+    for (const T& value : container)
     {
       union_set.add(value);
     }
@@ -98,7 +102,7 @@ public:
   Set<T> difference_with(const Container &container) const
   {
     Set<T> difference_set(m_set);
-    for (const T &value : container)
+    for (const T& value : container)
     {
       if (difference_set.is_contains(value)) // if find
       {
@@ -127,7 +131,7 @@ public:
       return false;
     }
     // std::set is sorted by default
-    for (const T &value : m_set)
+    for (const T& value : m_set)
     {
       if (!_other_set.is_contains(value))
       {
@@ -179,7 +183,7 @@ public:
     stream << "{";
 
     std::size_t idx = 0;
-    for (const T &value : set.m_set)
+    for (const T& value : set.m_set)
     {
       if (typeid(T) == typeid(char))
       {
