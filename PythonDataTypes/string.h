@@ -14,21 +14,20 @@ private:
     {
         assert(
             (
-                "String index out of range", (idx <= string_v.size() - 1) || (idx < 0)
-            )
-        );
+                "String index out of range", (idx <= string_v.size() - 1) || (idx < 0)));
     }
-    void __raise_substring_not_found_error__(std::string func_name) const
+    void __raise_substring_not_found_error__(const std::string &func_name) const
     {
         std::string msg = "substring not found";
         throw std::invalid_argument(func_name + msg);
     }
 
-    void __raise_exceed_1_char_long_error(std::string func_name) const {
+    void __raise_exceed_1_char_long_error(std::string func_name) const
+    {
         std::string msg = "'fillchar' must be 1 character long";
         throw std::invalid_argument(func_name + msg);
     }
-    
+
     const char &__getchar__(const int &idx) const
     {
 
@@ -110,14 +109,14 @@ public:
         return found_idx;
     }
 
-    std::size_t index(const String &searched_string, std::size_t start=std::string::npos, std::size_t end=std::string::npos) const
+    std::size_t index(const String &searched_string, std::size_t start = std::string::npos, std::size_t end = std::string::npos) const
     {
         std::size_t found_idx = __find_substring__(searched_string.m_string_v, start, end);
-        if (found_idx == std::string::npos) {
+        if (found_idx == std::string::npos)
+        {
             __raise_substring_not_found_error__(__PRETTY_FUNCTION__);
         }
         return found_idx;
-        
     }
 
     std::size_t length() const
@@ -188,8 +187,8 @@ public:
         }
         return String(capitalized_string);
     }
-    String title(const char& trailing_char = ' ') const 
-    {  
+    String title(const char &trailing_char = ' ') const
+    {
         std::string titled_string;
 
         std::size_t start_idx = 0;
@@ -222,11 +221,11 @@ public:
         String front_blank = String(trailing_char) * start_idx;
         String back_blank = String(trailing_char) * (m_string.size() - 1 - end_idx);
 
-        return String(front_blank.m_string + 
-                      titled_string + 
+        return String(front_blank.m_string +
+                      titled_string +
                       back_blank.m_string);
     }
-    String strip(const char& stripped = ' ') const
+    String strip(const char &stripped = ' ') const
     {
         std::size_t left = 0;
         std::size_t right = m_string.length() - 1;
@@ -237,17 +236,18 @@ public:
         while (m_string.at(right) == stripped)
         {
             right -= 1;
-        }     
+        }
         std::size_t substr_len = (right - left + 1);
 
-        return String( m_string_v.substr(left, substr_len) );
+        return String(m_string_v.substr(left, substr_len));
     }
     String pad_left(const std::size_t &width, const String &fillchar = " ") const
     {
-        if (fillchar.size() != 1) {
+        if (fillchar.size() != 1)
+        {
             __raise_exceed_1_char_long_error(__PRETTY_FUNCTION__);
         }
-        
+
         std::string pad_string;
         std::string pad;
         while (pad.size() < (width - m_string.size()))
